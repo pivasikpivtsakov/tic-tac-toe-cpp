@@ -1,40 +1,32 @@
 #include <cassert>
 #include "TreeNode.h"
 
-TreeNode::TreeNode(PlayField *const currentField, TreeNode *ancestorNode) : currentField(currentField) {
-    this->ancestorNode = ancestorNode;
-}
+TreeNode::TreeNode(PlayField &currentField) : currentField(currentField) { }
 
-bool TreeNode::isTerminal() {
-    PlayField::FieldStatus fieldStatus = currentField->checkFieldStatus();
+bool TreeNode::isTerminal() const {
+    PlayField::FieldStatus fieldStatus = currentField.checkFieldStatus();
     return fieldStatus != PlayField::FieldStatus::fsNormal;
 }
 
-int TreeNode::childQty() {
-    return currentField->getEmptyCells().size();
+int TreeNode::childQty() const {
+    return currentField.getEmptyCells().size();
 }
 
-void TreeNode::addChild(TreeNode *childNode) {
-    assert(childNodes->size() + 1 <= childQty());
-    childNode->ancestorNode = this;
-    childNodes->emplace_back(childNode);
+void TreeNode::addChild(TreeNode &childNode) {
+    assert(childNodes.size() + 1 <= childQty());
+    childNode.ancestorNode = this;
+    childNodes.emplace_back(childNode);
 }
 
-TreeNode *TreeNode::operator[](int childIndex) {
-    assert(childIndex < childNodes->size());
-    return (*childNodes)[childIndex];
+TreeNode &TreeNode::operator[](int childIndex) const {
+    assert(childIndex < childNodes.size());
+    return childNodes[childIndex];
 }
 
-int TreeNode::childCount() {
-    return childNodes->size();
+int TreeNode::childCount() const {
+    return childNodes.size();
 }
 
-PlayField *TreeNode::value() {
+PlayField &TreeNode::value() const {
     return currentField;
-}
-
-TreeNode::~TreeNode() {
-    for (auto &childNode : *childNodes)
-        delete childNode;
-    delete childNodes;
 }

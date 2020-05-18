@@ -8,16 +8,16 @@ using namespace std;
 
 void buildSubTree(TreeNode *node, bool isRootNode, int *wins = nullptr, int *defeats = nullptr,
                   int *draws = nullptr) {
-    auto emptyCells = node->value()->getEmptyCells();
-    for (auto &emptyCell : emptyCells) {
+    auto emptyCells = node->value().getEmptyCells();
+    for (auto emptyCell : emptyCells) {
         int firstMoveWins = 0;
         int firstMoveDefeats = 0;
         int firstMoveDraws = 0;
-        auto newField = node->value()->makeMove(&emptyCell);
+        auto newField = node->value().makeMove(emptyCell);
         auto nodeChild = new TreeNode(newField);
         node->addChild(nodeChild);
         if (nodeChild->isTerminal()) {
-            switch (nodeChild->value()->checkFieldStatus()) {
+            switch (nodeChild->value().checkFieldStatus()) {
                 case PlayField::FieldStatus::fsCrossesWin:
                     ++(*wins);
                     break;
@@ -50,7 +50,8 @@ void buildSubTree(TreeNode *node, bool isRootNode, int *wins = nullptr, int *def
 }
 
 int main() {
-    auto *node0 = new TreeNode(new PlayField(), nullptr);
+
+    auto *node0 = new TreeNode(PlayField(std::vector<PlayField::CellStatus>(9, PlayField::CellStatus::csEmpty)), nullptr);
     buildSubTree(node0, true);
     return 0;
 }

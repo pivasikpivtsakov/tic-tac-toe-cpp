@@ -4,24 +4,26 @@
 
 class TreeNode {
 public:
-    explicit TreeNode(PlayField *currentField, TreeNode *ancestorNode = nullptr);
+    explicit TreeNode(PlayField &currentField);
 
-    virtual ~TreeNode();
+    bool isTerminal() const;
 
-    bool isTerminal();
+    void addChild(TreeNode &childNode);
 
-    void addChild(TreeNode *childNode);
+    TreeNode &operator[](int childIndex) const;
 
-    TreeNode *operator[](int childIndex);
+    int childCount() const;
 
-    int childCount();
-
-    PlayField *value();
+    PlayField &value() const;
 
 private:
-    PlayField *const currentField;
-    std::vector<TreeNode *> *childNodes = new std::vector<TreeNode *>;
-    TreeNode *ancestorNode;
+    PlayField &currentField;
 
-    int childQty();
+    std::vector<std::reference_wrapper<TreeNode>> childNodes;
+
+    // корень дерева предка не имеет
+    // оставил указатель чтобы значение могло быть null
+    TreeNode *ancestorNode = nullptr;
+
+    int childQty() const;
 };

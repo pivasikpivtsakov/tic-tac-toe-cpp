@@ -1,14 +1,13 @@
-﻿#include <vector>
+﻿#pragma once
 
-#pragma once
+#include <vector>
 
 class PlayField {
 public:
     class CellPos {
     public:
         explicit CellPos(int cellNum);
-
-        ~CellPos();
+        CellPos(int row, int column);
 
         int getRow() const;
 
@@ -24,28 +23,29 @@ public:
         int _column;
     };
 
-    enum class CellStatus {
+    enum CellStatus {
         csEmpty, csCross, csNought
     };
 
-    enum class FieldStatus {
+    enum FieldStatus {
         fsInvalid, fsNormal, fsCrossesWin, fsNoughtsWin, fsDraw
     };
 
-    explicit PlayField(std::vector<CellStatus> *field = nullptr);
-    virtual ~PlayField();
+    explicit PlayField(std::vector<CellStatus>& field);
 
-    CellStatus operator[](CellPos *cellPos) const;
+    CellStatus operator[](const CellPos &cellPos) const;
 
     std::vector<CellPos> getEmptyCells() const;
 
     FieldStatus checkFieldStatus() const;
 
-    PlayField *makeMove(CellPos *cellPos) const;
+    PlayField makeMove(const CellPos &cellPos) const;
 
 private:
     // выигрыш по вертикали/горизонтали. Для уменьшения дублирования кода
     bool hasWinInLine(CellStatus player, bool row = false) const;
+
+    bool hasWinInDiagonal(CellStatus player) const;
 
     // есть ли вообще выигрыш (чтобы не дублировать код отдельно для крестиков и для ноликов)
     bool checkWinStatus(CellStatus player) const;
@@ -53,8 +53,10 @@ private:
     // считает клетки заданного типа. Используется в makeMove для определения игрока
     int countCells(CellStatus cellStatus) const;
 
-    PlayField *operator+(CellPos *cellPos) const;
+    static constexpr int fieldSize = 3;
 
-    std::vector<CellStatus> *_field;
+    PlayField operator+(const CellPos &cellPos) const;
+
+    std::vector<CellStatus> &_field;
 };
 
