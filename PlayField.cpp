@@ -1,19 +1,20 @@
 #include "PlayField.h"
 #include <cassert>
+#include <utility>
 
 PlayField::CellPos::CellPos(int cellNum) {
-    _row = cellNum / 3;
-    _column = cellNum % 3;
+    _row = cellNum / fieldSize;
+    _column = cellNum % fieldSize;
 }
 
-PlayField::CellPos::~CellPos() = default;
+PlayField::CellPos::CellPos(int row, int column) : _row(row), _column(column) { }
 
 int PlayField::CellPos::getRow() const {
     return _row;
 }
 
 void PlayField::CellPos::setRow(int value) {
-    assert(value >= 0 && value <= 2);
+    assert(value >= 0 && value <= fieldSize - 1);
     _row = value;
 }
 
@@ -22,40 +23,24 @@ int PlayField::CellPos::getColumn() const {
 }
 
 void PlayField::CellPos::setColumn(int value) {
-    assert(value >= 0 && value <= 2);
+    assert(value >= 0 && value <= fieldSize - 1);
     _column = value;
 }
 
 PlayField::CellPos::operator int() const {
-    return _column + _row * 3;
+    return _column + _row * fieldSize;
 }
 
-PlayField::PlayField(std::vector<CellStatus> *field) {
-    if (field != nullptr) {
-        auto *fieldCopy = new std::vector<CellStatus>(*field);
-        _field = fieldCopy;
-    } else {
-        _field = new std::vector<CellStatus>{
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty,
-                CellStatus::csEmpty};
-    }
-}
+PlayField::PlayField(std::vector<CellStatus> field) : _field(std::move(field)) { }
 
-PlayField::CellStatus PlayField::operator[](CellPos *cellPos) const {
-    return (*_field)[int(*cellPos)];
+PlayField::CellStatus PlayField::operator[](const CellPos &cellPos) const {
+    return _field[int(cellPos)];
 }
 
 std::vector<PlayField::CellPos> PlayField::getEmptyCells() const {
     std::vector<CellPos> result;
-    for (int i = 0; i < _field->size(); ++i)
-        if ((*_field)[i] == CellStatus::csEmpty)
+    for (int i = 0; i < _field.size(); ++i)
+        if (_field[i] == CellStatus::csEmpty)
             result.emplace_back(CellPos(i));
     return result;
 }
@@ -63,18 +48,21 @@ std::vector<PlayField::CellPos> PlayField::getEmptyCells() const {
 bool PlayField::hasWinInLine(PlayField::CellStatus player, bool row) const {
     int multiplier = row ? 1 : 3;
     for (int i = 0; i < 3; ++i) {
-        if ((*_field)[i] == player &&
-            (*_field)[i + 1 * multiplier] == player &&
-            (*_field)[i + 2 * multiplier] == player)
+        if (_field[i] == player &&
+            _field[i + 1 * multiplier] == player &&
+            _field[i + 2 * multiplier] == player)
             return true;
     }
     return false;
 }
 
+bool PlayField::hasWinInDiagonal(PlayField::CellStatus player) const {
+    return _field[0] == player && _field[4] == player && _field[8] == player ||
+           _field[2] == player && _field[4] == player && _field[6] == player;
+}
+
 bool PlayField::checkWinStatus(PlayField::CellStatus player) const {
-    return (*_field)[0] == player && (*_field)[4] == player && (*_field)[8] == player ||
-           (*_field)[2] == player && (*_field)[4] == player && (*_field)[6] == player ||
-           hasWinInLine(player) || hasWinInLine(player, true);
+    return hasWinInDiagonal(player) || hasWinInLine(player) || hasWinInLine(player, true);
 }
 
 PlayField::FieldStatus PlayField::checkFieldStatus() const {
@@ -91,16 +79,17 @@ PlayField::FieldStatus PlayField::checkFieldStatus() const {
     return FieldStatus::fsNormal;
 }
 
-PlayField *PlayField::operator+(CellPos *cellPos) const {
-    auto *newField = new PlayField(_field);
-    (*(newField->_field))[int(*cellPos)] =
+PlayField PlayField::operator+(const CellPos &cellPos) const {
+    PlayField newField(_field);
+    // нормальный критерий я проверял
+    newField._field[int(cellPos)] =
             countCells(CellStatus::csCross) > countCells(CellStatus::csNought)
             ? CellStatus::csNought
             : CellStatus::csCross;
     return newField;
 }
 
-PlayField *PlayField::makeMove(CellPos *cellPos) const {
+PlayField PlayField::makeMove(const CellPos &cellPos) const {
     FieldStatus fieldStatus = checkFieldStatus();
     assert((*this)[cellPos] == CellStatus::csEmpty ||
            fieldStatus != FieldStatus::fsCrossesWin ||
@@ -109,13 +98,9 @@ PlayField *PlayField::makeMove(CellPos *cellPos) const {
     return *this + cellPos;
 }
 
-PlayField::~PlayField() {
-    delete _field;
-}
-
 int PlayField::countCells(PlayField::CellStatus cellStatus) const {
     int result = 0;
-    for (auto &i : *_field) {
+    for (auto i : _field) {
         if (i == cellStatus)
             ++result;
     }

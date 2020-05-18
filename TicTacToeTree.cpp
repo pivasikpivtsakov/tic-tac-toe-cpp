@@ -6,18 +6,18 @@
 
 using namespace std;
 
-void buildSubTree(TreeNode *node, bool isRootNode, int *wins = nullptr, int *defeats = nullptr,
+void buildSubTree(TreeNode &node, bool isRootNode, int *wins = nullptr, int *defeats = nullptr,
                   int *draws = nullptr) {
-    auto emptyCells = node->value()->getEmptyCells();
-    for (auto &emptyCell : emptyCells) {
+    auto emptyCells = node.value().getEmptyCells();
+    for (auto emptyCell : emptyCells) {
         int firstMoveWins = 0;
         int firstMoveDefeats = 0;
         int firstMoveDraws = 0;
-        auto newField = node->value()->makeMove(&emptyCell);
-        auto nodeChild = new TreeNode(newField);
-        node->addChild(nodeChild);
+        auto newField = node.value().makeMove(emptyCell);
+        auto *nodeChild = new TreeNode(newField);
+        node.addChild(*nodeChild);
         if (nodeChild->isTerminal()) {
-            switch (nodeChild->value()->checkFieldStatus()) {
+            switch (nodeChild->value().checkFieldStatus()) {
                 case PlayField::FieldStatus::fsCrossesWin:
                     ++(*wins);
                     break;
@@ -32,9 +32,9 @@ void buildSubTree(TreeNode *node, bool isRootNode, int *wins = nullptr, int *def
             }
         } else {
             if (isRootNode)
-                buildSubTree(nodeChild, false, &firstMoveWins, &firstMoveDefeats, &firstMoveDraws);
+                buildSubTree(*nodeChild, false, &firstMoveWins, &firstMoveDefeats, &firstMoveDraws);
             else
-                buildSubTree(nodeChild, false, wins, defeats, draws);
+                buildSubTree(*nodeChild, false, wins, defeats, draws);
         }
         if (isRootNode) {
             std::cout << "Starting with cell row: " << emptyCell.getRow() << " column: " << emptyCell.getColumn()
@@ -46,11 +46,14 @@ void buildSubTree(TreeNode *node, bool isRootNode, int *wins = nullptr, int *def
             firstMoveDefeats = 0;
             firstMoveDraws = 0;
         }
+        delete nodeChild;
     }
 }
 
 int main() {
-    auto *node0 = new TreeNode(new PlayField(), nullptr);
+    std::vector<PlayField::CellStatus> startingCells(9, PlayField::CellStatus::csEmpty);
+    PlayField startingField(startingCells);
+    TreeNode node0(startingField);
     buildSubTree(node0, true);
     return 0;
 }
