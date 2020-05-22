@@ -31,8 +31,6 @@ public:
         fsInvalid, fsNormal, fsCrossesWin, fsNoughtsWin, fsDraw
     };
 
-    explicit PlayField(std::vector<CellStatus> field);
-
     CellStatus operator[](const CellPos &cellPos) const;
 
     std::vector<CellPos> getEmptyCells() const;
@@ -57,6 +55,6 @@ private:
 
     PlayField operator+(const CellPos &cellPos) const;
 
-    std::vector<CellStatus> _field;
+    std::vector<CellStatus> _field = std::vector<CellStatus>(9, PlayField::CellStatus::csEmpty);
 };
 

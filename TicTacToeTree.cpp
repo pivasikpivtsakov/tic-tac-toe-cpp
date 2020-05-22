@@ -51,8 +51,7 @@ void buildSubTree(TreeNode &node, bool isRootNode, int *wins = nullptr, int *def
 }
 
 int main() {
-    std::vector<PlayField::CellStatus> startingCells(9, PlayField::CellStatus::csEmpty);
-    PlayField startingField(startingCells);
+    PlayField startingField;
     TreeNode node0(startingField);
     buildSubTree(node0, true);
     return 0;

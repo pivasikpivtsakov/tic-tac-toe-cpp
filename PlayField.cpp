@@ -1,6 +1,5 @@
 #include "PlayField.h"
 #include <cassert>
-#include <utility>
 
 PlayField::CellPos::CellPos(int cellNum) {
     _row = cellNum / fieldSize;
@@ -31,8 +30,6 @@ PlayField::CellPos::operator int() const {
     return _column + _row * fieldSize;
 }
 
-PlayField::PlayField(std::vector<CellStatus> field) : _field(std::move(field)) { }
-
 PlayField::CellStatus PlayField::operator[](const CellPos &cellPos) const {
     return _field[int(cellPos)];
 }
@@ -46,8 +43,8 @@ std::vector<PlayField::CellPos> PlayField::getEmptyCells() const {
 }
 
 bool PlayField::hasWinInLine(PlayField::CellStatus player, bool row) const {
-    int multiplier = row ? 1 : 3;
-    for (int i = 0; i < 3; ++i) {
+    int multiplier = row ? 1 : fieldSize;
+    for (int i = 0; i < fieldSize; ++i) {
         if (_field[i] == player &&
             _field[i + 1 * multiplier] == player &&
             _field[i + 2 * multiplier] == player)
@@ -80,7 +77,8 @@ PlayField::FieldStatus PlayField::checkFieldStatus() const {
 }
 
 PlayField PlayField::operator+(const CellPos &cellPos) const {
-    PlayField newField(_field);
+    PlayField newField;
+    newField._field = _field;
     // нормальный критерий я проверял
     newField._field[int(cellPos)] =
             countCells(CellStatus::csCross) > countCells(CellStatus::csNought)
