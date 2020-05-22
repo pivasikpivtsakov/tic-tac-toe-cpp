@@ -14,10 +14,10 @@ void buildSubTree(TreeNode &node, bool isRootNode, int *wins = nullptr, int *def
         int firstMoveDefeats = 0;
         int firstMoveDraws = 0;
         auto newField = node.value().makeMove(emptyCell);
-        auto *nodeChild = new TreeNode(newField);
-        node.addChild(*nodeChild);
-        if (nodeChild->isTerminal()) {
-            switch (nodeChild->value().checkFieldStatus()) {
+        auto nodeChild = TreeNode(newField);
+        node.addChild(nodeChild);
+        if (nodeChild.isTerminal()) {
+            switch (nodeChild.value().checkFieldStatus()) {
                 case PlayField::FieldStatus::fsCrossesWin:
                     ++(*wins);
                     break;
@@ -32,9 +32,9 @@ void buildSubTree(TreeNode &node, bool isRootNode, int *wins = nullptr, int *def
             }
         } else {
             if (isRootNode)
-                buildSubTree(*nodeChild, false, &firstMoveWins, &firstMoveDefeats, &firstMoveDraws);
+                buildSubTree(nodeChild, false, &firstMoveWins, &firstMoveDefeats, &firstMoveDraws);
             else
-                buildSubTree(*nodeChild, false, wins, defeats, draws);
+                buildSubTree(nodeChild, false, wins, defeats, draws);
         }
         if (isRootNode) {
             std::cout << "Starting with cell row: " << emptyCell.getRow() << " column: " << emptyCell.getColumn()
@@ -46,7 +46,6 @@ void buildSubTree(TreeNode &node, bool isRootNode, int *wins = nullptr, int *def
             firstMoveDefeats = 0;
             firstMoveDraws = 0;
         }
-        delete nodeChild;
     }
 }
 
