@@ -6,6 +6,8 @@ class TreeNode {
 public:
     explicit TreeNode(int value);
 
+    virtual ~TreeNode();
+
     int getValue() const;
 
     void setValue(int value);
@@ -18,10 +20,8 @@ public:
 
     void setRightChild(TreeNode *rightChild);
 
-    TreeNode();
-
 private:
-    int _value;
-    TreeNode *_leftChild;
-    TreeNode *_rightChild;
+    int _value = 0;
+    TreeNode *_leftChild = nullptr;
+    TreeNode *_rightChild = nullptr;
 };

@@ -1,15 +1,6 @@
 #include "TreeNode.h"
 
-TreeNode::TreeNode(int value) : _value(value) {
-    _leftChild = nullptr;
-    _rightChild = nullptr;
-}
-
-TreeNode::TreeNode() {
-    _leftChild = nullptr;
-    _rightChild = nullptr;
-    _value = 0;
-}
+TreeNode::TreeNode(int value) : _value(value) {}
 
 int TreeNode::getValue() const {
     return _value;
@@ -33,4 +24,9 @@ TreeNode *TreeNode::getRightChild() const {
 
 void TreeNode::setRightChild(TreeNode *rightChild) {
     _rightChild = rightChild;
+}
+
+TreeNode::~TreeNode() {
+    delete _leftChild;
+    delete _rightChild;
 }
