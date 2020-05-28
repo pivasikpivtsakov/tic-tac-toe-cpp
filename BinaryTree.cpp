@@ -35,8 +35,12 @@ TreeNode *BinaryTree::Search(int value) {
         else
             return Search(value, _rightChild);
     // если равно - то возвращаем корень
-    } else
-        return new TreeNode(_rootValue);
+    } else /* if (value == _rootValue) */{
+        auto *node = new TreeNode(_rootValue);
+        node->setLeftChild(_leftChild);
+        node->setRightChild(_rightChild);
+        return node;
+    }
 }
 
 void BinaryTree::Insert(int value, TreeNode *node) {
@@ -69,6 +73,6 @@ TreeNode *BinaryTree::Search(int value, TreeNode *node) {
             return Search(value, node->getRightChild());
     // если равно - возвращаем вершину
     // https://github.com/pivasikpivtsakov/tic-tac-toe-cpp/pull/2#discussion_r429669734
-    } else
+    } else // if (value == node->getValue())
         return node;
 }
