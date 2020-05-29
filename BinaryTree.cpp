@@ -10,17 +10,9 @@ BinaryTree::~BinaryTree() {
 
 void BinaryTree::Insert(int value) {
     if (value < _rootValue) {
-        if (_leftChild == nullptr) {
-            _leftChild = new TreeNode(value);
-            _rootNode->setLeftChild(_leftChild);
-        } else
-            Insert(value, _leftChild);
+        Insert(value, _leftChild);
     } else if (value > _rootValue) {
-        if (_rightChild == nullptr) {
-            _rightChild = new TreeNode(value);
-            _rootNode->setRightChild(_rightChild);
-        } else
-            Insert(value, _rightChild);
+        Insert(value, _rightChild);
     }
 }
 
@@ -28,17 +20,23 @@ TreeNode *BinaryTree::Search(int value) {
     return SearchCommon(value, _rootValue, _leftChild, _rightChild, _rootNode);
 }
 
-void BinaryTree::Insert(int value, TreeNode *node) {
+void BinaryTree::Insert(int value, TreeNode *&node) {
+    if (node == nullptr)
+        node = new TreeNode(value);
     if (value < node->getValue()) {
         if (node->getLeftChild() == nullptr)
             node->setLeftChild(new TreeNode(value));
-        else
-            Insert(value, node->getLeftChild());
+        else {
+            auto child = node->getLeftChild();
+            Insert(value, child);
+        }
     } else if (value > node->getValue()) {
         if (node->getRightChild() == nullptr)
             node->setRightChild(new TreeNode(value));
-        else
-            Insert(value, node->getRightChild());
+        else {
+            auto child = node->getRightChild();
+            Insert(value, child);
+        }
     }
 }
 

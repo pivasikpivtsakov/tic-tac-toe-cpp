@@ -13,7 +13,7 @@ public:
     TreeNode *Search(int value);
 
 private:
-    static void Insert(int value, TreeNode *node);
+    static void Insert(int value, TreeNode *&node);
 
     static TreeNode *Search(int value, TreeNode *node);
 
