@@ -27,16 +27,10 @@ void BinaryTree::Insert(int value) {
 TreeNode *BinaryTree::Search(int value) {
     // если искомое число меньше корня, ищем его в левой ветке
     if (value < _rootValue) {
-        if (_leftChild == nullptr)
-            return nullptr;
-        else
-            return Search(value, _leftChild);
+        return SearchIfBranchNotEmpty(value, _leftChild);
         // если больше - в правой
     } else if (value > _rootValue) {
-        if (_rightChild == nullptr)
-            return nullptr;
-        else
-            return Search(value, _rightChild);
+        return SearchIfBranchNotEmpty(value, _rightChild);
         // если равно - то возвращаем корень
     } else /* if (value == _rootValue) */
         return _rootNode;
@@ -59,17 +53,18 @@ void BinaryTree::Insert(int value, TreeNode *node) {
 TreeNode *BinaryTree::Search(int value, TreeNode *node) {
     // если искомое число меньше вершины, ищем его в левой ветке
     if (value < node->getValue()) {
-        if (node->getLeftChild() == nullptr)
-            return nullptr;
-        else
-            return Search(value, node->getLeftChild());
+        return SearchIfBranchNotEmpty(value, node->getLeftChild());
         // если больше - в правой
     } else if (value > node->getValue()) {
-        if (node->getRightChild() == nullptr)
-            return nullptr;
-        else
-            return Search(value, node->getRightChild());
+        return SearchIfBranchNotEmpty(value, node->getRightChild());
         // если равно - возвращаем вершину
     } else // if (value == node->getValue())
         return node;
+}
+
+TreeNode *BinaryTree::SearchIfBranchNotEmpty(int value, TreeNode *branch) {
+    if (branch == nullptr)
+        return nullptr;
+    else
+        return Search(value, branch);
 }
