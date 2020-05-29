@@ -1,7 +1,8 @@
+// written by Михаил Чайков, РИ-280001
 #include <iostream>
 #include "BinaryTree.h"
 
-void CreateMinimalBST(BinaryTree &tree, const int *arrayStartPtr, int startIndex, int endIndex) {
+void CreateMinimalBST(BinaryTree &tree, const int * arrayStartPtr, int startIndex, int endIndex) {
     if (endIndex < startIndex)
         return;
     int middleIndex = (startIndex + endIndex) / 2;
@@ -10,8 +11,8 @@ void CreateMinimalBST(BinaryTree &tree, const int *arrayStartPtr, int startIndex
     CreateMinimalBST(tree, arrayStartPtr, middleIndex + 1, endIndex);
 }
 
-void SearchAndOutput(BinaryTree &tree, int value){
-    auto *foundNode = tree.Search(value);
+void SearchAndOutput(BinaryTree &tree, int value) {
+    auto * foundNode = tree.Search(value);
     if (foundNode == nullptr)
         std::cout << "Node not found, value: " << value << std::endl;
     else
