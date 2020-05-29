@@ -19,7 +19,10 @@ private:
 
     static TreeNode *SearchIfBranchNotEmpty(int value, TreeNode *branch);
 
-    TreeNode *_rootNode = new TreeNode(0);
+    static TreeNode *
+    SearchCommon(int value, int compareToValue, TreeNode *leftBranch, TreeNode *rightBranch, TreeNode *node);
+
+    TreeNode *_rootNode;
     int _rootValue = 0;
     TreeNode *_leftChild = nullptr;
     TreeNode *_rightChild = nullptr;

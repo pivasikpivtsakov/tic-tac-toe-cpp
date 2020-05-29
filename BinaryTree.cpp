@@ -1,7 +1,7 @@
 #include "BinaryTree.h"
 
 BinaryTree::BinaryTree(int value) : _rootValue(value) {
-    _rootNode->setValue(value);
+    _rootNode = new TreeNode(value);
 }
 
 BinaryTree::~BinaryTree() {
@@ -25,15 +25,7 @@ void BinaryTree::Insert(int value) {
 }
 
 TreeNode *BinaryTree::Search(int value) {
-    // если искомое число меньше корня, ищем его в левой ветке
-    if (value < _rootValue) {
-        return SearchIfBranchNotEmpty(value, _leftChild);
-        // если больше - в правой
-    } else if (value > _rootValue) {
-        return SearchIfBranchNotEmpty(value, _rightChild);
-        // если равно - то возвращаем корень
-    } else /* if (value == _rootValue) */
-        return _rootNode;
+    return SearchCommon(value, _rootValue, _leftChild, _rightChild, _rootNode);
 }
 
 void BinaryTree::Insert(int value, TreeNode *node) {
@@ -51,15 +43,7 @@ void BinaryTree::Insert(int value, TreeNode *node) {
 }
 
 TreeNode *BinaryTree::Search(int value, TreeNode *node) {
-    // если искомое число меньше вершины, ищем его в левой ветке
-    if (value < node->getValue()) {
-        return SearchIfBranchNotEmpty(value, node->getLeftChild());
-        // если больше - в правой
-    } else if (value > node->getValue()) {
-        return SearchIfBranchNotEmpty(value, node->getRightChild());
-        // если равно - возвращаем вершину
-    } else // if (value == node->getValue())
-        return node;
+    return SearchCommon(value, node->getValue(), node->getLeftChild(), node->getRightChild(), node);
 }
 
 TreeNode *BinaryTree::SearchIfBranchNotEmpty(int value, TreeNode *branch) {
@@ -67,4 +51,17 @@ TreeNode *BinaryTree::SearchIfBranchNotEmpty(int value, TreeNode *branch) {
         return nullptr;
     else
         return Search(value, branch);
+}
+
+TreeNode *
+BinaryTree::SearchCommon(int value, int compareToValue, TreeNode *leftBranch, TreeNode *rightBranch, TreeNode *node) {
+    // если искомое число меньше вершины, ищем его в левой ветке
+    if (value < compareToValue) {
+        return SearchIfBranchNotEmpty(value, leftBranch);
+        // если больше - в правой
+    } else if (value > compareToValue) {
+        return SearchIfBranchNotEmpty(value, rightBranch);
+        // если равно - возвращаем вершину
+    } else // if (value == node->getValue())
+        return node;
 }

@@ -12,11 +12,11 @@ public:
 
     void setValue(int value);
 
-    TreeNode *getLeftChild() const;
+    TreeNode* getLeftChild() const;
 
     void setLeftChild(TreeNode *leftChild);
 
-    TreeNode *getRightChild() const;
+    TreeNode* getRightChild() const;
 
     void setRightChild(TreeNode *rightChild);
 
