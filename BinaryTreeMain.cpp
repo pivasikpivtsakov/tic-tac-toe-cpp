@@ -1,37 +1,38 @@
 #include <iostream>
 #include "BinaryTree.h"
 
-void CreateMinimalBST(BinaryTree *tree, const int *arrayStartPtr, int startIndex, int endIndex) {
+void CreateMinimalBST(BinaryTree &tree, const int *arrayStartPtr, int startIndex, int endIndex) {
     if (endIndex < startIndex)
         return;
     int middleIndex = (startIndex + endIndex) / 2;
-    tree->Insert(arrayStartPtr[middleIndex]);
+    tree.Insert(arrayStartPtr[middleIndex]);
     CreateMinimalBST(tree, arrayStartPtr, startIndex, middleIndex - 1);
     CreateMinimalBST(tree, arrayStartPtr, middleIndex + 1, endIndex);
 }
 
+void SearchAndOutput(BinaryTree &tree, int value){
+    auto *foundNode = tree.Search(value);
+    if (foundNode == nullptr)
+        std::cout << "Node not found, value: " << value << std::endl;
+    else
+        std::cout << "Found node with value: " << foundNode->getValue() << std::endl;
+}
+
 int main() {
-    int array[7]{1, 2, 3, 4, 5, 6, 7};
-    int startIndex = 1;
+    int array[6]{1, 3, 5, 7, 9, 11};
+    int startIndex = 0;
     int endIndex = std::size(array) - 1;
     int middleIndex = (startIndex + endIndex) / 2;
-    auto *tree = new BinaryTree(array[middleIndex]);
+    BinaryTree tree = BinaryTree(array[middleIndex]);
     CreateMinimalBST(tree, array, startIndex, endIndex);
-    // 4 - корень, создали вершину динамически, получили утечку памяти
-    // вершина нашлась, см. вывод и дебагер
-    auto *foundNode = tree->Search(4);
-    std::cout << "Found node with value: " << foundNode->getValue() << std::endl;
-    // 6 - вершина, тоже нашлась
-    foundNode = tree->Search(6);
-    std::cout << "Found node with value: " << foundNode->getValue() << std::endl;
-    // 7 - лист дерева, нашёлся
-    foundNode = tree->Search(7);
-    std::cout << "Found node with value: " << foundNode->getValue() << std::endl;
-    // проверим, что отсутствующие вершины не находятся
-    foundNode = tree->Search(100500);
-    if (foundNode == nullptr)
-        std::cout << "Node not found" << std::endl;
-    else
-        std::cout << "Node found (this should not happen)" << std::endl;
+    SearchAndOutput(tree, 4);
+    SearchAndOutput(tree, 1);
+    SearchAndOutput(tree, 3);
+    SearchAndOutput(tree, 5);
+    SearchAndOutput(tree, 6);
+    SearchAndOutput(tree, 7);
+    SearchAndOutput(tree, 9);
+    SearchAndOutput(tree, 11);
+    SearchAndOutput(tree, 100500);
     return 0;
 }
