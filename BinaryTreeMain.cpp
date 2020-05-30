@@ -26,6 +26,8 @@ int main() {
     int middleIndex = (startIndex + endIndex) / 2;
     BinaryTree tree = BinaryTree(array[middleIndex]);
     CreateMinimalBST(tree, array, startIndex, endIndex);
+    SearchAndOutput(tree, -9000);
+    SearchAndOutput(tree, 0);
     SearchAndOutput(tree, 4);
     SearchAndOutput(tree, 1);
     SearchAndOutput(tree, 3);
