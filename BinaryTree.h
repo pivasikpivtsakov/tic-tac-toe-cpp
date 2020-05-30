@@ -6,6 +6,8 @@ class BinaryTree {
 public:
     explicit BinaryTree(int value);
 
+    BinaryTree() = default;
+
     virtual ~BinaryTree();
 
     void Insert(int value);
