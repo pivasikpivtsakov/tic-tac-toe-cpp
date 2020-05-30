@@ -4,10 +4,6 @@ BinaryTree::BinaryTree(int value) {
     _rootNode = new TreeNode(value);
 }
 
-BinaryTree::BinaryTree() {
-    _rootNode = new TreeNode(0);
-}
-
 BinaryTree::~BinaryTree() {
     delete _rootNode;
 }
@@ -21,19 +17,23 @@ TreeNode* BinaryTree::Search(int value) {
 }
 
 void BinaryTree::Insert(int value, TreeNode*&node) {
-    if (value < node->getValue()) {
-        if (node->getLeftChild() == nullptr)
-            node->setLeftChild(new TreeNode(value));
-        else {
-            auto child = node->getLeftChild();
-            Insert(value, child);
-        }
-    } else if (value > node->getValue()) {
-        if (node->getRightChild() == nullptr)
-            node->setRightChild(new TreeNode(value));
-        else {
-            auto child = node->getRightChild();
-            Insert(value, child);
+    if (node == nullptr)
+        node = new TreeNode(value);
+    else {
+        if (value < node->getValue()) {
+            if (node->getLeftChild() == nullptr)
+                node->setLeftChild(new TreeNode(value));
+            else {
+                auto child = node->getLeftChild();
+                Insert(value, child);
+            }
+        } else if (value > node->getValue()) {
+            if (node->getRightChild() == nullptr)
+                node->setRightChild(new TreeNode(value));
+            else {
+                auto child = node->getRightChild();
+                Insert(value, child);
+            }
         }
     }
 }

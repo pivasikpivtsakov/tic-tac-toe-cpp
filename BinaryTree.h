@@ -6,8 +6,6 @@ class BinaryTree {
 public:
     explicit BinaryTree(int value);
 
-    BinaryTree();
-
     virtual ~BinaryTree();
 
     void Insert(int value);
@@ -15,13 +13,13 @@ public:
     TreeNode* Search(int value);
 
 private:
-    static void Insert(int value, TreeNode *&node);
+    static void Insert(int value, TreeNode*&node);
 
-    static TreeNode* Search(int value, TreeNode *node);
+    static TreeNode* Search(int value, TreeNode* node);
 
-    static TreeNode* SearchIfBranchNotEmpty(int value, TreeNode *branch);
+    static TreeNode* SearchIfBranchNotEmpty(int value, TreeNode* branch);
 
-    static TreeNode* SearchCommon(int value, TreeNode *node);
+    static TreeNode* SearchCommon(int value, TreeNode* node);
 
-    TreeNode *_rootNode = nullptr;
+    TreeNode* _rootNode = nullptr;
 };
